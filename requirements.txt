@@ -1,4 +1,4 @@
 discord.py
-schedule
-asyncio
+aiocron
 requests
+bs4
