@@ -73,15 +73,15 @@ async def on_message(ctx: discord.Message):
     if bot and userId == DISCORD_BOT_ID:
         if channelId == DISCORD_CHANNEL_ID:
             await ctx.create_thread(
-                name = "Комментарий",
+                name = "Комментарий", # You can change the "Комментарий" to something else like "Comment"
                 reason = "Allowing to comment in this message"
             )
     else:
         if channelId == DISCORD_CHANNEL_ID:
             await ctx.delete()
 
-    if ctx.content.startswith('!check'):
+    if ctx.content.startswith('!debug'):
         latest_message = get_latest_message(CHANNEL_URL)
-        await ctx.channel.send(f'Latest message from Telegram channel (<{CHANNEL_URL}>): {latest_message[0]}\nCurrent channed id: {DISCORD_CHANNEL_ID}')
+        await ctx.channel.send(f'If you see this message, it means that the bot is alive\nLatest message from Telegram channel (<{CHANNEL_URL}>): {latest_message[0]}\nCurrent channed id: {DISCORD_CHANNEL_ID}')
 
 bot.run(TOKEN_BOT)
