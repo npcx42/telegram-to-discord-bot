@@ -35,7 +35,7 @@ class cronjobs():
         
         # * * * * * */20 - 20 seconds
         # 0 */1 * * * - 1 hour
-        @aiocron.crontab('0 */1 * * * - 1')
+        @aiocron.crontab('0 */1 * * *')
         async def get_channel_post():
             new_message = get_latest_message(CHANNEL_URL)
             await bot.get_channel(DISCORD_CHANNEL_ID).send(f'{new_message[0]}')
