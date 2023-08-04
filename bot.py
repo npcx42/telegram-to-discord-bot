@@ -5,7 +5,7 @@ import discord
 import requests
 
 TOKEN_BOT = 'discord_token' # Discord bot token here
-CHANNEL_URL = 'channel_link' # You need get ONLY public channel link
+CHANNEL_URL = 'channel_link' # You need get ONLY public channel link. For example: https://t.me/s/vernam_central
 DISCORD_CHANNEL_ID = 0 # Here you need paste channel id
 DISCORD_BOT_ID = 0 # Here you need paste bot id account
 
