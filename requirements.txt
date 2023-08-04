@@ -1,0 +1,4 @@
+discord.py
+schedule
+asyncio
+requests
