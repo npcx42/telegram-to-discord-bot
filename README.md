@@ -1,4 +1,5 @@
-# telegram-to-discord-bot (ENG)
+# telegram-to-discord-bot
+### (ENG)
 This bot allows you to forward posts from your telegram channel to discord
 
 # Installation
@@ -7,11 +8,11 @@ Requirements:
 YOUR CHANNEL MUST BE OPENED!!!
 
 To use this bot you need first install Python and Python libraries.
-So, first download Python [here](https://www.python.org/downloads/release/python-3108/), when you will open installer - you need choose `pip` and `Add to PATH` to successfully use script. And then after install you need open console terminal or something else that you can write commands in folder script, and then write this to install libraries: `pip install -r requirements.txt`. Now open script file and change these values `TOKEN_BOT`, `CHANNEL_URL` `DISCORD_CHANNEL_ID`, `DISCORD_BOT_ID` to your specifics. And now you can start script as well and enjoy
+So, first download Python [here](https://www.python.org/downloads/release/python-3108/), when you will open installer - you need choose `pip` and `Add to PATH` to successfully use script. And then after install you need open console terminal or something else that you can write commands in folder script, and then write this to install libraries: `pip install -r requirements.txt`. Now you need open `config.ini` file and change some values to your specifics. And now you can start script as well and enjoy
 
-# If the code doesn't work, you should create an issue.
+### If the code doesn't work, you should create an issue. You can create an issue [here](https://github.com/npcx42/telegram-to-discord-bot/issues/new).
 
-# telegram-to-discord-bot(RUS)
+### (RUS)
 
 Этот бот позволяет вам пересылать посты из телеграма на ваш сервер в дискорде.
 
@@ -20,6 +21,6 @@ So, first download Python [here](https://www.python.org/downloads/release/python
 Требования:
 ВАШ КАНАЛ ДОЛЖЕН БЫТЬ ОБЯЗАТЕЛЬНО ПУБЛИЧНЫМ!!!
 
-Для использования этого бота необходимо установить Python и необходимые библиотеки. Итак, Python вы можете скачать [здесь](https://www.python.org/downloads/release/python-3108/), после этого вам нужно запустить установщик. В нем вам надо обязательно нажать на галочку Add to PATH, иначе ничего не получится. После установки желательно перезагрузить ваш компьютер. Откройте консоль в папке с ботом и напишите команду pip install -r requirements.txt. После этого откройте файл bot.py и измените эти значения: TOKEN_BOT, CHANNEL_URL, DISCORD_CHANNEL_ID, DISCORD_BOT_ID на ваши. После этого вы можете использовать скрипт в удовольствие.
+Для использования этого бота необходимо установить Python и необходимые библиотеки. Итак, Python вы можете скачать [здесь](https://www.python.org/downloads/release/python-3108/), после этого вам нужно запустить установщик. В нем вам надо обязательно нажать на галочку Add to PATH, иначе ничего не получится. После установки желательно перезагрузить ваш компьютер. Откройте консоль в папке с ботом и напишите команду pip install -r requirements.txt. После этого откройте файл `config.ini` и измените эти значения: TOKEN_BOT, CHANNEL_URL, DISCORD_CHANNEL_ID, DISCORD_BOT_ID на ваши. После этого вы можете использовать скрипт в удовольствие.
 
-# При неработоспособности кода открывайте issue.
+### При неработоспособности кода создайте новый issue. Создать issue вы можете [здесь](https://github.com/npcx42/telegram-to-discord-bot/issues/new).
