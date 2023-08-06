@@ -6,12 +6,13 @@ import requests
 import configparser
 
 configure_get = configparser.ConfigParser()
-configure = configure_get.read('config.ini', encoding = 'utf-8')
+configure_get.read('config.ini', encoding = 'utf-8')
+settings = configure_get['BOT_SETTINGS']
 
-TOKEN_BOT = configure['SETTINGS']['token_bot']
-CHANNEL_URL = configure['SETTINGS']['channel_url']
-DISCORD_CHANNEL_ID = configure['SETTINGS']['discord_channel_id']
-DISCORD_BOT_ID = configure['SETTINGS']['discord_bot_id']
+TOKEN_BOT = settings['token_bot']
+CHANNEL_URL = settings['channel_url']
+DISCORD_CHANNEL_ID = int(settings['discord_channel_id'])
+DISCORD_BOT_ID = int(settings['discord_bot_id'])
 
 class cronjobs():
     def __init__(self, bot: commands.Bot) -> None:
