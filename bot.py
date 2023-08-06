@@ -3,11 +3,15 @@ from bs4 import BeautifulSoup
 import aiocron
 import discord
 import requests
+import configparser
 
-TOKEN_BOT = 'discord_token' # Discord bot token here
-CHANNEL_URL = 'channel_link' # You need get ONLY public channel link. For example: https://t.me/s/vernam_central
-DISCORD_CHANNEL_ID = 0 # Here you need paste channel id
-DISCORD_BOT_ID = 0 # Here you need paste bot id account
+configure_get = configparser.ConfigParser()
+configure = configure_get.read('config.ini', encoding = 'utf-8')
+
+TOKEN_BOT = configure['SETTINGS']['token_bot']
+CHANNEL_URL = configure['SETTINGS']['channel_url']
+DISCORD_CHANNEL_ID = configure['SETTINGS']['discord_channel_id']
+DISCORD_BOT_ID = configure['SETTINGS']['discord_bot_id']
 
 class cronjobs():
     def __init__(self, bot: commands.Bot) -> None:
