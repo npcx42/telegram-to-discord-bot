@@ -84,9 +84,13 @@ async def on_message(ctx: discord.Message):
     else:
         if channelId == DISCORD_CHANNEL_ID:
             await ctx.delete()
+        else:
+            pass
 
     if ctx.content.startswith('!debug'):
         latest_message = get_latest_message(CHANNEL_URL)
         await ctx.channel.send(f'If you see this message, it means that the bot is alive\nLatest message from Telegram channel (<{CHANNEL_URL}>): {latest_message[0]}\nCurrent channed id: {DISCORD_CHANNEL_ID}')
+    else:
+        pass
 
 bot.run(TOKEN_BOT)
