@@ -1,4 +1,5 @@
 from discord.ext import commands
+from discord import Intents
 from bs4 import BeautifulSoup
 import aiocron
 import discord
@@ -13,9 +14,13 @@ TOKEN_BOT = settings['token_bot']
 CHANNEL_URL = settings['channel_url']
 DISCORD_CHANNEL_ID = int(settings['discord_channel_id'])
 DISCORD_BOT_ID = int(settings['discord_bot_id'])
+DISCORD_THREAD_NAME = settings['discord_thread_name']
+DISCORD_DEBUG_ACCESS = settings['discord_debug_access_uid'].split(',')
+
+print(DISCORD_DEBUG_ACCESS)
 
 class cronjobs():
-    def __init__(self, bot: commands.Bot) -> None:
+    def __init__(self, bot: commands.Bot):
         self.bot = bot
         
         # * * * * * */20 - 20 seconds
@@ -33,16 +38,17 @@ class tgToDiscord(commands.Bot):
             intents = intents
         )
 
-    async def setup_hook(self) -> None:
+    async def setup_hook(self):
         cron = cronjobs(self)
 
-    async def close(self) -> None:
+    async def close(self):
         await super().close()
 
-intents = discord.Intents.all()
+intents = Intents.all()
 bot = tgToDiscord(intents)
 intents.members = True
 intents.messages = True
+intents.message_content = True
 
 last_message = None
 
@@ -78,15 +84,26 @@ async def on_message(ctx: discord.Message):
     if bot and userId == DISCORD_BOT_ID:
         if channelId == DISCORD_CHANNEL_ID:
             await ctx.create_thread(
-                name = "Комментарий", # You can change the "Комментарий" to something else like "Comment"
+                name = DISCORD_THREAD_NAME,
                 reason = "Allowing to comment in this message"
             )
     else:
         if channelId == DISCORD_CHANNEL_ID:
             await ctx.delete()
+        else:
+            pass
 
+    # По непонятной причине, @bot.command() вообще не работает, хотя я ставил intents.message_content = True :/
     if ctx.content.startswith('!debug'):
-        latest_message = get_latest_message(CHANNEL_URL)
-        await ctx.channel.send(f'If you see this message, it means that the bot is alive\nLatest message from Telegram channel (<{CHANNEL_URL}>): {latest_message[0]}\nCurrent channed id: {DISCORD_CHANNEL_ID}')
+        target = ctx.author
+        if str(target.id) in DISCORD_DEBUG_ACCESS:
+            latest_message = get_latest_message(CHANNEL_URL)
+            await ctx.channel.send(f'If you see this message, it means that the bot is alive\nLatest message from Telegram channel (<{CHANNEL_URL}>): {latest_message[0]}\nCurrent channed id: {DISCORD_CHANNEL_ID}')
+
+    elif ctx.content.startswith('!getmsg'):
+        target = ctx.author
+        if str(target.id) in DISCORD_DEBUG_ACCESS:
+            latest_message = get_latest_message(CHANNEL_URL)
+            await ctx.channel.send(f'{latest_message[0]}')
 
 bot.run(TOKEN_BOT)
