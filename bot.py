@@ -95,10 +95,8 @@ async def on_message(ctx: discord.Message):
 
     # По непонятной причине, @bot.command() вообще не работает, хотя я ставил intents.message_content = True :/
     if ctx.content.startswith('!debug'):
-        target = ctx.author
-        if str(target.id) in DISCORD_DEBUG_ACCESS:
-            latest_message = get_latest_message(CHANNEL_URL)
-            await ctx.channel.send(f'If you see this message, it means that the bot is alive\nLatest message from Telegram channel (<{CHANNEL_URL}>): {latest_message[0]}\nCurrent channed id: {DISCORD_CHANNEL_ID}')
+        latest_message = get_latest_message(CHANNEL_URL)
+        await ctx.channel.send(f'If you see this message, it means that the bot is alive\nLatest message from Telegram channel (<{CHANNEL_URL}>): {latest_message[0]}\nCurrent channed id: {DISCORD_CHANNEL_ID}')
 
     elif ctx.content.startswith('!getmsg'):
         target = ctx.author
