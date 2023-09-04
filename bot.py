@@ -1,3 +1,4 @@
+# TODO: Rewrite this shitass code.
 from discord.ext import commands
 from discord import Intents
 from bs4 import BeautifulSoup
