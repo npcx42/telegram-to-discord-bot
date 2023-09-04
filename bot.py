@@ -28,8 +28,9 @@ class cronjobs():
         @aiocron.crontab('0 */1 * * *')
         async def get_channel_post():
             new_message = get_latest_message(CHANNEL_URL)
-            await bot.get_channel(DISCORD_CHANNEL_ID).send(f'{new_message[0]}')
-            print(f'Sended post from \'{CHANNEL_URL}\' with content: {new_message[0]}')
+            message_data = new_message[0]
+            await bot.get_channel(DISCORD_CHANNEL_ID).send(f'{message_data}')
+            print(f'Sended post from \'{CHANNEL_URL}\' with content: {message_data}')
 
 class tgToDiscord(commands.Bot):
     def __init__(self, intents):
