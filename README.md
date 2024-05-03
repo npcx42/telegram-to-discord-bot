@@ -1,4 +1,6 @@
 # telegram-to-discord-bot
+### There will be no updates due to the fact that I have lost interest in python. 
+
 ### (ENG)
 This bot allows you to forward posts from your telegram channel to discord
 
