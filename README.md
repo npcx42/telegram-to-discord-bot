@@ -12,7 +12,7 @@ YOUR CHANNEL MUST BE OPENED!!!
 To use this bot you need first install Python(required only 3.10.8 version) and Python libraries.
 So, first download Python [here](https://www.python.org/downloads/release/python-3108/), when you will open installer - you need choose `pip` and `Add to PATH` to successfully use script. And then after install you need open console terminal or something else that you can write commands in folder script, and then write this to install libraries: `pip install -r requirements.txt`. Now you need open `config.ini` file and change some values to your specifics. Channel link should look like this example: `https://t.me/s/replacethis`. And now you can start script as well and enjoy!
 
-### If the code doesn't work, you should create an issue. You can create an issue [here](https://github.com/npcx42/telegram-to-discord-bot/issues/). You can also get support on our [discord server](https://discord.gg/wjCMmS2Njw)
+### If the code doesn't work, you should create an issue. You can create an issue [here](https://github.com/npcx42/telegram-to-discord-bot/issues/). ~~You can also get support on our [discord server](https://discord.gg/wjCMmS2Njw)~~
 
 ### (RUS)
 
@@ -27,5 +27,5 @@ So, first download Python [here](https://www.python.org/downloads/release/python
 me/s/имяканала`), DISCORD_CHANNEL_ID, DISCORD_BOT_ID на ваши. После этого вы можете использовать скрипт в удовольствие.
 
 
-### При неработоспособности кода создайте новый issue. Создать issue вы можете [здесь](https://github.com/npcx42/telegram-to-discord-bot/issues/new). Вы так же можете получить поддержку на нашем [дискорд сервере](https://discord.gg/wjCMmS2Njw).
+### При неработоспособности кода создайте новый issue. Создать issue вы можете [здесь](https://github.com/npcx42/telegram-to-discord-bot/issues/new). ~~Вы так же можете получить поддержку на нашем [дискорд сервере](https://discord.gg/wjCMmS2Njw).~~
 
