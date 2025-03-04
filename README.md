@@ -1,4 +1,4 @@
-[📖 English version of the guide is available here]()
+[📖 English version of the guide is available here](https://github.com/npcx42/telegram-to-discord-bot/blob/main/README_en.md)
 # TeleRelayBot 
 
 ### ⚠️ Первое обновление проекта за долгое время!  
