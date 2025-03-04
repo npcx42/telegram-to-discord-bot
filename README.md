@@ -1,5 +1,10 @@
+<<<<<<< HEAD
 [📖 English version of the guide is available here]()
 # TeleRelayBot 
+=======
+# telegram-to-discord-bot
+### ~~There will be no updates due to the fact that I have lost interest in python.~~
+>>>>>>> c4aafad3f20bbf1969d8d299a8fd79fcad29d977
 
 ### ⚠️ Первое обновление проекта за долгое время!  
 
