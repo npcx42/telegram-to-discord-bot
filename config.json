@@ -1,0 +1,8 @@
+{
+    "token_bot": "first of all you need a token",
+    "channel_url": "https://t.me/s/channel",
+    "discord_bot_id": "here goes the bot id",
+    "discord_channel_id": "channel id must be here",
+    "discord_thread_name": "you can use this for comments inside a thread",
+    "discord_debug_access_uid": ["your id", "your friend id"]
+}

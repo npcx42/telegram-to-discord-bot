@@ -1,111 +1,117 @@
-# TODO: Rewrite this shitass code.
-from discord.ext import commands
-from discord import Intents
+import json
+import requests
 from bs4 import BeautifulSoup
 import aiocron
 import discord
-import requests
-import configparser
+from discord.ext import commands
+from discord import app_commands
 
-configure_get = configparser.ConfigParser()
-configure_get.read('config.ini', encoding = 'utf-8')
-settings = configure_get['BOT_SETTINGS']
+# Загрузка конфигурации из JSON файла
+with open("config.json", encoding="utf-8") as f:
+    config = json.load(f)
 
-TOKEN_BOT = settings['token_bot']
-CHANNEL_URL = settings['channel_url']
-DISCORD_CHANNEL_ID = int(settings['discord_channel_id'])
-DISCORD_BOT_ID = int(settings['discord_bot_id'])
-DISCORD_THREAD_NAME = settings['discord_thread_name']
-DISCORD_DEBUG_ACCESS = settings['discord_debug_access_uid'].split(',')
+TOKEN_BOT = config["token_bot"]
+CHANNEL_URL = config["channel_url"]
+DISCORD_BOT_ID = int(config["discord_bot_id"])
+DISCORD_CHANNEL_ID = int(config["discord_channel_id"])
+DISCORD_THREAD_NAME = config["discord_thread_name"]
+DISCORD_DEBUG_ACCESS = config["discord_debug_access_uid"]  # список id в виде строк
 
-print(DISCORD_DEBUG_ACCESS)
-
-class cronjobs():
-    def __init__(self, bot: commands.Bot):
-        self.bot = bot
-        
-        # * * * * * */20 - 20 seconds
-        # 0 */1 * * * - 1 hour
-        @aiocron.crontab('0 */1 * * *')
-        async def get_channel_post():
-            new_message = get_latest_message(CHANNEL_URL)
-            message_data = new_message[0]
-            await bot.get_channel(DISCORD_CHANNEL_ID).send(f'{message_data}')
-            print(f'Sended post from \'{CHANNEL_URL}\' with content: {message_data}')
-
-class tgToDiscord(commands.Bot):
-    def __init__(self, intents):
-        super().__init__(
-            command_prefix = '!',
-            intents = intents
-        )
+class MyBot(commands.Bot):
+    def __init__(self, command_prefix: str, intents: discord.Intents):
+        super().__init__(command_prefix=command_prefix, intents=intents)
+        self.last_message = None  # Память для последнего отправленного поста
 
     async def setup_hook(self):
-        cron = cronjobs(self)
+        # Регистрируем slash-команды в дереве команд
+        self.tree.add_command(debug_command)
+        self.tree.add_command(getmsg_command)
+        await self.tree.sync()
+        self.start_channel_check()
 
-    async def close(self):
-        await super().close()
+    def fetch_latest_message(self, channel_url: str) -> str or None:
+        """Запрашивает страницу канала и возвращает новый пост (если он отличается от предыдущего)."""
+        try:
+            response = requests.get(channel_url)
+            response.raise_for_status()
+        except Exception as e:
+            print(f"Ошибка запроса: {e}")
+            return None
 
-intents = Intents.all()
-bot = tgToDiscord(intents)
-intents.members = True
-intents.messages = True
-intents.message_content = True
+        soup = BeautifulSoup(response.content, "html.parser")
+        messages = soup.find_all("div", class_="tgme_widget_message_text")
+        if not messages:
+            return None
 
-last_message = None
+        new_text = messages[-1].get_text(strip=True)
+        if new_text == self.last_message:
+            return None
 
-def get_latest_message(channel_url):
-    global last_message
-    page = requests.get(channel_url)
-    soup = BeautifulSoup(page.content, 'html.parser')
-    messages = soup.find_all('div', class_='tgme_widget_message_text')
-    new_messages = []
+        self.last_message = new_text
+        return new_text
 
-    for message in reversed(messages):
-        text = message.text
-        if text == last_message:
-            break
-        new_messages.append(text)
+    def start_channel_check(self):        # Планировщик, запускаемый по расписанию каждые 5 минут
+        @aiocron.crontab("*/5 * * * *")
+        async def scheduled_check():
+            new_text = self.fetch_latest_message(CHANNEL_URL)
+            if new_text:
+                channel = self.get_channel(DISCORD_CHANNEL_ID)
+                if channel:
+                    try:
+                        await channel.send(new_text)
+                        print(f"Отправлено новое сообщение с {CHANNEL_URL}: {new_text}")
+                    except Exception as e:
+                        print(f"Ошибка при отправке сообщения: {e}")
 
-    if new_messages:
-        last_message = new_messages[-1]
+    async def on_ready(self):
+        print(f"Logged in as {self.user} (ID: {self.user.id})")
 
-    return new_messages
+    async def on_message(self, message: discord.Message):
+        channelId = message.channel.id
+        userId = message.author.id
+        bot = message.author.bot
 
-@bot.event
-async def on_ready():
-    print(f'Logged in as {bot.user} (ID: {bot.user.id})')
-
-@bot.event
-async def on_message(ctx: discord.Message):
-    channelId = ctx.channel.id
-    userId = ctx.author.id
-    bot = ctx.author.bot
-
-    # Тут просто, скрипт проверяет условие того, является ли сообщение от бота или нет.
-    if bot and userId == DISCORD_BOT_ID:
-        if channelId == DISCORD_CHANNEL_ID:
-            await ctx.create_thread(
-                name = DISCORD_THREAD_NAME,
-                reason = "Allowing to comment in this message"
-            )
-    else:
-        if channelId == DISCORD_CHANNEL_ID:
-            await ctx.delete()
+        # Проверка, является ли сообщение от бота
+        if bot and userId == DISCORD_BOT_ID:
+            if channelId == DISCORD_CHANNEL_ID:
+                await message.create_thread(
+                    name=DISCORD_THREAD_NAME,
+                    reason="Разрешение на комментарии под сообщением"
+                )
         else:
-            pass
+            if channelId == DISCORD_CHANNEL_ID:
+                await message.delete()
 
-    # По непонятной причине, @bot.command() вообще не работает, хотя я ставил intents.message_content = True :/
-    if ctx.content.startswith('!debug'):
-        cli_target = ctx.author
-        if str(cli_target.id) in DISCORD_DEBUG_ACCESS:
-            latest_message = get_latest_message(CHANNEL_URL)
-            await ctx.channel.send(f'If you see this message, it means that the bot is alive\nLatest message from Telegram channel (<{CHANNEL_URL}>): {latest_message[0]}\nCurrent channed id: {DISCORD_CHANNEL_ID}')
+# Инициализация бота
+intents = discord.Intents.all()
+bot = MyBot(command_prefix="!", intents=intents)
 
-    elif ctx.content.startswith('!getmsg'):
-        target = ctx.author
-        if str(target.id) in DISCORD_DEBUG_ACCESS:
-            latest_message = get_latest_message(CHANNEL_URL)
-            await ctx.channel.send(f'{latest_message[0]}')
+# Slash-команды
+
+@app_commands.command(name="debug", description="Проверить работу бота и получить последнее сообщение из Telegram")
+async def debug_command(interaction: discord.Interaction):
+    if str(interaction.user.id) not in DISCORD_DEBUG_ACCESS:
+        await interaction.response.send_message("У вас нет прав для выполнения этой команды.", ephemeral=True)
+        return
+    new_text = bot.fetch_latest_message(CHANNEL_URL)
+    if new_text:
+        response_msg = (
+            f"Бот работает.\nПоследнее сообщение из Telegram:\n{new_text}\n"
+            f"ID канала Discord: {DISCORD_CHANNEL_ID}"
+        )
+        await interaction.response.send_message(response_msg)
+    else:
+        await interaction.response.send_message("Новых сообщений не найдено.", ephemeral=True)
+
+@app_commands.command(name="getmsg", description="Получить последнее сообщение из Telegram")
+async def getmsg_command(interaction: discord.Interaction):
+    if str(interaction.user.id) not in DISCORD_DEBUG_ACCESS:
+        await interaction.response.send_message("У вас нет прав для выполнения этой команды.", ephemeral=True)
+        return
+    new_text = bot.fetch_latest_message(CHANNEL_URL)
+    if new_text:
+        await interaction.response.send_message(new_text)
+    else:
+        await interaction.response.send_message("Новых сообщений не найдено.", ephemeral=True)
 
 bot.run(TOKEN_BOT)
