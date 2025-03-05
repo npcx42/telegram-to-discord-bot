@@ -30,6 +30,7 @@ pip install -r requirements.txt
   "CHANNEL_URL": "https://t.me/s/имяканала",
   "DISCORD_CHANNEL_ID": "ID_канала_Discord",
   "DISCORD_BOT_ID": "ID_бота_Discord"
+  "discord_debug_access_uid": ["your id", "your friend id"]
 }
 ```  
 После этого можно запускать скрипт и пользоваться ботом! 🚀  
